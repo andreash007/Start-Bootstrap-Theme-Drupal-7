@@ -4,8 +4,8 @@
 
       /**
        * jQuery page scroll Speed
+       * https://github.com/nathco/jQuery.scrollSpeed
        */
-        //https://github.com/nathco/jQuery.scrollSpeed
         // jQuery.scrollSpeed(50, 1400);
 
       /**
@@ -15,8 +15,8 @@
 
       /**
        * back to Top
+       * http://www.jqueryscript.net/animation/Customizable-Back-To-Top-Button-with-jQuery-backTop.html
        */
-      // http://www.jqueryscript.net/animation/Customizable-Back-To-Top-Button-with-jQuery-backTop.html
       //$("body").append("<a id='backTop'>Back To Top</a>")
       //$('#backTop').backTop({
       //  'position' : 1600,
