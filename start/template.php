@@ -17,13 +17,13 @@ function achat_preprocess_html (&$vars) {
 /**
  * Add Bootstrap functionality to main menu.
  */
-function start_menu_tree__main_menu(&$variables) {
-  $output = _bootstrap_link_formatter($variables);
+function start_menu_tree__main_menu(&$vars) {
+  $output = _bootstrap_link_formatter($vars);
   return $output;
 }
 
 /* Helper function for formatting links to bootstrap styles */
-function _bootstrap_link_formatter(&$variables){
+function _bootstrap_link_formatter(&$vars){
   $output =
     '<nav class="navbar navbar-default">
 		<div class="container-fluid">
@@ -37,7 +37,7 @@ function _bootstrap_link_formatter(&$variables){
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-navbar-collapse">
-				<ul class="nav navbar-nav">'. $variables['tree'].'</ul>
+				<ul class="nav navbar-nav">'. $vars['tree'].'</ul>
 			</div>
 		</div>
 	</nav>';
