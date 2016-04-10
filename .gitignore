@@ -1,6 +1,7 @@
 # exclude development folder
 /.idea
 /.sass-cache
+/sass/.sass-cache
 
 # Windows image file caches
 Thumbs.db
