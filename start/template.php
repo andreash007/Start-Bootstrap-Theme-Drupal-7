@@ -3,11 +3,45 @@
  * Override or insert variables for the page templates.
  */
 function start_preprocess_html (&$vars) {
+  //Add noindex meta tag to dynamic page, when clean url enable
+  if (!empty($GLOBALS['conf']['clean_url'])) {
+    $current_uri = request_uri();
+    $dynamic = strpos($current_uri, "?");
+    if($dynamic == TRUE) {
+      $noindex = array(
+        '#tag' => 'meta',
+        '#attributes' => array(
+          'name' => 'robots',
+          'content' => "noindex, follow",
+        ),
+      );
+      drupal_add_html_head($noindex, 'noindex_follow');
+    }
+  }
   // Add Font Awesome
   // drupal_add_css('https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', array('group' => CSS_THEME, 'type' => 'external'));
 
   // Add Local styles
   // drupal_add_css('http://localhost/dev/start/css/style.css', array('group' => CSS_THEME, 'type' => 'external'));
+}
+
+/**
+ * Fix for SEO
+ */
+function start_html_head_alter(&$head_elements) {
+  foreach ($head_elements as $key => $element) {
+    // Unset Short link
+    if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'shortlink') {
+      unset($head_elements[$key]);
+    }
+
+    // Unset Short link
+    if (drupal_is_front_page()) {
+      if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'canonical'){
+        $head_elements[$key]['#attributes']['href'] = '/';
+      }
+    }
+  }
 }
 
 /**
@@ -21,8 +55,8 @@ function start_menu_tree__main_menu(&$vars) {
 /**
  * Provide a bootstrap multilevel menu
  */
-function start_menu_link__main_menu(&$variables) {
-  $output = _bootstrap_multilevel_menu($variables);
+function start_menu_link__main_menu(&$vars) {
+  $output = _bootstrap_multilevel_menu($vars);
   return $output;
 }
 
@@ -50,8 +84,8 @@ function _bootstrap_link_formatter(&$vars){
 
 // Helper function to provide a bootstrap multilevel menu
 // See for details http://www.drupalgeeks.com/drupal-blog/how-render-bootstrap-sub-menus
-function _bootstrap_multilevel_menu($variables) {
-  $element = $variables['element'];
+function _bootstrap_multilevel_menu($vars) {
+  $element = $vars['element'];
   $sub_menu = '';
   if ($element['#below']) {
     // Prevent dropdown functions from being added to management menu so it
@@ -103,7 +137,7 @@ function _bootstrap_multilevel_menu($variables) {
       return '';
     }
   }
-  $element['#attributes']['class'][] = 'mlid-'.$variables['element']['#original_link']['mlid'];
+  $element['#attributes']['class'][] = 'mlid-'.$vars['element']['#original_link']['mlid'];
   $output = l($element['#title'], $element['#href'], $element['#localized_options']);
   return '<li ' . drupal_attributes($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
