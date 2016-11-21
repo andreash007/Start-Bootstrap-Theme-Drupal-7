@@ -27,17 +27,21 @@ function start_preprocess_html (&$vars) {
  * Fix for SEO
  */
 function start_html_head_alter(&$head_elements) {
-  foreach ($head_elements as $key => $element) {
-    // Unset Short link
-    if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'shortlink') {
-      unset($head_elements[$key]);
-    }
+  // Unset canonical metatag from 404 pages
+  $status = drupal_get_http_header("status");
+  if($status === '404 Not Found'){
+    if(isset($head_elements['metatag_canonical']))
+      unset($head_elements['metatag_canonical']);
+  }
+	
+  // Unset Short link metatag
+  if(isset($head_elements['metatag_shortlink']))
+    unset($head_elements['metatag_shortlink']);
 
-    // Unset Short link
-    if (drupal_is_front_page()) {
-      if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'canonical'){
-        $head_elements[$key]['#attributes']['href'] = '/';
-      }
+  // Fix canonical metatag for Frontpage
+  if (drupal_is_front_page()) {
+    if (isset($head_elements['metatag_canonical'])){
+      $head_elements['metatag_canonical']['#value'] = '/';
     }
   }
 }
